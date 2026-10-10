@@ -1,0 +1,77 @@
+{
+  "family": "gamma",
+  "link": "log",
+  "features": [
+    "DrivAgeBand",
+    "BonusMalusBand",
+    "VehAgeBand",
+    "VehGas",
+    "LogDensity"
+  ],
+  "base_levels": {
+    "DrivAgeBand": "41-50",
+    "BonusMalusBand": "50",
+    "VehAgeBand": "6-10",
+    "VehGas": "Diesel"
+  },
+  "levels": {
+    "DrivAgeBand": [
+      "18-20",
+      "21-25",
+      "26-30",
+      "31-40",
+      "41-50",
+      "51-60",
+      "61-70",
+      "71+"
+    ],
+    "BonusMalusBand": [
+      "50",
+      "51-57",
+      "58-65",
+      "66-75",
+      "76-90",
+      "91-100",
+      "101+"
+    ],
+    "VehAgeBand": [
+      "0",
+      "1-2",
+      "3-5",
+      "6-10",
+      "11-15",
+      "16+"
+    ],
+    "VehGas": [
+      "Diesel",
+      "Regular"
+    ]
+  },
+  "coefficients": {
+    "Intercept": 7.4565690691,
+    "DrivAgeBand[18-20]": 0.1863274834,
+    "DrivAgeBand[21-25]": 0.0060082312,
+    "DrivAgeBand[26-30]": -0.038588433,
+    "DrivAgeBand[31-40]": 0.0629960879,
+    "DrivAgeBand[51-60]": 0.065217157,
+    "DrivAgeBand[61-70]": -0.0159129359,
+    "DrivAgeBand[71+]": 0.188834342,
+    "BonusMalusBand[51-57]": 0.0776939874,
+    "BonusMalusBand[58-65]": -0.0371910916,
+    "BonusMalusBand[66-75]": -0.0460763407,
+    "BonusMalusBand[76-90]": 0.1269376369,
+    "BonusMalusBand[91-100]": 0.1943756528,
+    "BonusMalusBand[101+]": 0.1081324569,
+    "VehAgeBand[0]": 0.0952871245,
+    "VehAgeBand[1-2]": 0.0191475598,
+    "VehAgeBand[3-5]": 0.0086220555,
+    "VehAgeBand[11-15]": -0.0293234386,
+    "VehAgeBand[16+]": -0.1499053435,
+    "VehGas[Regular]": 0.010392039,
+    "LogDensity": -0.0116805275
+  },
+  "deviance": 18139.848799556414,
+  "null_deviance": 18298.831742479313,
+  "n_obs": 14740,
+  "dispersion_scale": 4.138334960355462
+}

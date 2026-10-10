@@ -1,0 +1,4 @@
+DrivAge,BonusMalus,VehAge,VehPower,VehBrand,VehGas,Region,Density
+19,100,0,6,B12,Regular,R11,5000
+45,50,8,6,B1,Diesel,R24,50
+72,50,12,7,B2,Regular,R82,800

@@ -1,0 +1,15 @@
+# Not deployed anywhere. Ready-to-run local stack: one-shot pipeline job and a batch scorer.
+services:
+  pipeline:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    command: ["run"]
+    volumes:
+      - ../data:/app/data
+      - ../reports:/app/reports
+      - ../docs/figures:/app/docs/figures
+      - ../models:/app/models
+  score:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    command: ["score", "/io/policies.csv", "/io/scored.csv"]
+    volumes:
+      - ./io:/io

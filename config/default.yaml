@@ -1,0 +1,87 @@
+# Single source of configuration for the pricing study.
+# Every number the pipeline produces is a function of this file + the raw data.
+
+seed: 20261010
+
+data:
+  raw_dir: data/raw
+  sample_dir: data/sample
+  # OpenML dataset 41214 (freMTPL2freq) and 41215 (freMTPL2sev), parquet mirrors.
+  sources:
+    freq:
+      openml_id: 41214
+      url: https://data.openml.org/datasets/0004/41214/dataset_41214.pq
+      file: freMTPL2freq.pq
+      sha256: null   # filled by `autopricing download` into data/raw/MANIFEST.json
+    sev:
+      openml_id: 41215
+      url: https://data.openml.org/datasets/0004/41215/dataset_41215.pq
+      file: freMTPL2sev.pq
+      sha256: null
+
+cleaning:
+  exclude_claims_only_block: true   # finding DQ-1: leading IDpol block contains only claim records
+  reconcile_claim_counts: true      # ClaimNb := number of claim records with an amount (DQ-2)
+  cap_claim_nb: 4                   # DQ-3
+  cap_exposure: 1.0                 # DQ-4: exposure > 1 year is not plausible for an annual contract
+  large_loss_quantile: 0.995        # individual claims capped at this train quantile; excess spread as a load
+
+split:
+  train: 0.6
+  validation: 0.2                   # test = remainder
+  # Rows with identical rating features are kept in the same split (possible same-risk duplicates).
+  group_by_rating_features: true
+
+glm:
+  frequency_features: [DrivAgeBand, BonusMalusBand, VehAgeBand, VehPowerBand, VehBrand, VehGas, Region, LogDensity]
+  severity_features: [DrivAgeBand, BonusMalusBand, VehAgeBand, VehGas, LogDensity]
+  # v1.1 candidate from validation finding V-04 (benchmarked, not the champion)
+  interaction_candidate: [AgeXBM]
+  # Variables whose base level is the highest-exposure level (actuarial convention).
+  max_iter: 100
+
+gbm:
+  # Small, fixed grid tuned on the validation set (early stopping on validation deviance).
+  learning_rate: 0.05
+  num_boost_round: 3000
+  early_stopping_rounds: 100
+  n_jobs: 8
+  grid:
+    num_leaves: [15, 31, 63]
+    min_child_samples: [200, 1000]
+  common:
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 1
+    lambda_l2: 1.0
+  tweedie_power: 1.5           # sensitivity tests 1.3 / 1.7
+  features: [DrivAge, BonusMalus, VehAge, VehPower, VehBrand, VehGas, Region, Area, LogDensity]
+  categorical: [VehBrand, VehGas, Region, Area]
+
+evaluation:
+  n_bins: 10
+  bootstrap_reps: 200
+  shap_sample: 5000
+
+fairness:
+  sensitive_attribute: DrivAgeBand
+  young_driver_max_age: 25
+
+monitoring:
+  psi_bins: 10
+  thresholds:
+    psi: {amber: 0.10, red: 0.25}
+    ae_ratio: {amber: 0.05, red: 0.10}      # |A/E - 1|
+    gini_drop: {amber: 0.03, red: 0.06}     # absolute drop vs validation baseline
+  scenarios:
+    - name: "Hold-out test book (expected: stable)"
+      filter: null
+    - name: "Paris region only (R11), real subset"
+      filter: "Region == 'R11'"
+    - name: "Young drivers (age < 30), real subset"
+      filter: "DrivAge < 30"
+
+sensitivity:
+  split_seeds: [1, 2, 3]
+  large_loss_quantiles: [0.99, 0.995, 0.999, 1.0]
+  tweedie_powers: [1.3, 1.5, 1.7]

@@ -1,0 +1,23 @@
+| factor         | level   |   glm |   gbm_shap |
+|:---------------|:--------|------:|-----------:|
+| DrivAgeBand    | 18-20   | 1.504 |      1.320 |
+| DrivAgeBand    | 21-25   | 0.849 |      0.834 |
+| DrivAgeBand    | 26-30   | 0.615 |      0.699 |
+| DrivAgeBand    | 31-40   | 0.848 |      0.871 |
+| DrivAgeBand    | 41-50   | 1.126 |      1.146 |
+| DrivAgeBand    | 51-60   | 1.153 |      1.106 |
+| DrivAgeBand    | 61-70   | 1.036 |      1.019 |
+| DrivAgeBand    | 71+     | 1.272 |      1.126 |
+| BonusMalusBand | 50      | 0.706 |      0.748 |
+| BonusMalusBand | 51-57   | 1.098 |      1.021 |
+| BonusMalusBand | 58-65   | 1.765 |      1.471 |
+| BonusMalusBand | 66-75   | 1.584 |      1.482 |
+| BonusMalusBand | 76-90   | 2.062 |      2.035 |
+| BonusMalusBand | 91-100  | 3.463 |      2.997 |
+| BonusMalusBand | 101+    | 6.649 |      5.006 |
+| VehAgeBand     | 0       | 1.166 |      1.122 |
+| VehAgeBand     | 1-2     | 1.131 |      1.127 |
+| VehAgeBand     | 3-5     | 1.063 |      1.108 |
+| VehAgeBand     | 6-10    | 1.056 |      1.076 |
+| VehAgeBand     | 11-15   | 0.927 |      0.890 |
+| VehAgeBand     | 16+     | 0.648 |      0.630 |

@@ -1,0 +1,50 @@
+# Model inventory record (illustrative; portfolio project, not a production system)
+- model_id: MTPL-RP-GLM-001
+  name: Motor TPL risk-premium GLM (frequency x severity)
+  version: 1.0.0
+  status: validated-with-findings (not deployed)
+  owner: Ali Askari (developer)            # in a real firm: a named 1st-line model owner
+  validator: Ali Askari (self, independent-style)   # finding V-07: not independent
+  business_use: Risk (pure) premium for French motor third-party liability; input to a rate indication
+  decision_impact: Sets the expected-loss component of every policy's premium
+  intended_users: Pricing actuaries / pricing analysts
+  out_of_scope:
+    - Underwriting accept/decline decisions
+    - Claims reserving or individual claim handling
+    - Any jurisdiction or product other than French MTPL as represented in freMTPL2
+    - Use without the large-loss load (the GLM predicts capped losses)
+  methodology: Poisson GLM (log link, log-exposure offset, quasi-Poisson SEs) x Gamma GLM (log link, claim-count weights); large losses capped at train 99.5th pct and loaded back
+  data: freMTPL2freq + freMTPL2sev (OpenML 41214 / 41215, CC0 on OpenML; CASdatasets GPL>=2)
+  ai_system: false   # classical statistical model; still in scope of NAIC "predictive model" governance
+  uses_ecdis: false  # no external consumer data (credit, telematics, social)
+  risk_tier: 1       # 1 = highest
+  tier_rationale:
+    materiality: high (drives premium for the whole book)
+    complexity: low-medium (GLM, ~60 parameters)
+    regulatory_exposure: high (rate filing; unfair-discrimination rules)
+    reliance: high (no human override of individual risk premium)
+  validation:
+    last_validation: 2026-10-10
+    report: docs/mrm/validation_report.md
+    findings_open: see docs/mrm/issues_log.md
+    next_validation_due: 12 months after deployment, or on any RED monitoring trigger
+  monitoring_plan: docs/mrm/monitoring_plan.md
+  artefacts:
+    code: src/autopricing/
+    config: config/default.yaml
+    model_parameters: [models/glm_frequency.json, models/glm_severity.json]
+    metrics: reports/metrics.json
+
+- model_id: MTPL-RP-GBM-001
+  name: LightGBM Tweedie pure-premium challenger
+  version: 1.0.0
+  status: challenger only (benchmarking; not approved for pricing)
+  owner: Ali Askari
+  business_use: Benchmark for the GLM; discovery of missing interactions
+  methodology: LightGBM, Tweedie objective (p=1.5), exposure weights, early stopping on validation
+  ai_system: true    # machine-learning model under the NAIC bulletin's definition of AI system
+  risk_tier: 1
+  tier_rationale:
+    note: Would be tier 1 if used for pricing; explainability and filing constraints apply (see validation report)
+  artefacts:
+    model: models/lgbm_tweedie_pure_premium.txt
